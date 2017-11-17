@@ -29,7 +29,6 @@ app.get('/', function(req, res){
 
 app.get('/search', function(req, res){
     let isItValid = validator(req.query.q);
-    console.log(isItValid);
     if (isItValid){
         let selector = 'SELECT * FROM licence_plates WHERE plate LIKE "%' + req.query.q + '%"';
         if (req.query.police){
@@ -86,16 +85,13 @@ app.get('/search/:brand', function(req, res){
 });
 
 function validator(licence_plate){
-    console.log(licence_plate);
     let allowedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ-0123456789';
     let upperCasePlate = licence_plate.toUpperCase()
-    console.log(upperCasePlate);
     if (upperCasePlate.length > 7){
         return false;
     } else {
         for (let i = 0; i < upperCasePlate.length; i++){
             if (!allowedChars.includes(upperCasePlate[i])){
-                console.log('hali');
                 return false;
             }
         }
