@@ -51,7 +51,7 @@ function createTable(json){
     json.data.forEach(function(row){
         htmlString += `<tr>
                            <td>| ${row.licence} </td>
-                           <td>| ${row.brand} </td>
+                           <td>| [<span class="brand">${row.brand}</span>] </td>
                            <td>| ${row.model} </td>
                            <td>| ${row.year} </td>
                            <td>| ${row.color} |</td>
@@ -60,4 +60,16 @@ function createTable(json){
     htmlString += '</tbody>';
     searchTable.innerHTML = htmlString;
     results.appendChild(searchTable);
+    addBrandEvents();
+}
+
+function addBrandEvents(){
+    let brands = results.querySelectorAll('.brand');
+    brands.forEach(function(element){
+        element.addEventListener('click', function(){
+            results.innerHTML = '';
+            let query = '/' + element.innerHTML;
+            xml('GET', query, createTable);
+        });
+    });
 }
