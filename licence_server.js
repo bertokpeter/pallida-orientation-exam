@@ -28,8 +28,13 @@ app.get('/', function(req, res){
 });
 
 app.get('/search', function(req, res){
-    console.log(req.query);
-    conn.query('SELECT * FROM licence_plates WHERE plate LIKE "%' + req.query.q + '%";', function(err, rows){
+    let selector = 'SELECT * FROM licence_plates WHERE plate LIKE "%' + req.query.q + '%"';
+    if (req.query.police){
+        selector += 'AND plate LIKE "RB%"'
+    } else if (req.query.diplomat){
+        selector += 'AND plate LIKE "DT%"'
+    }
+    conn.query(selector, function(err, rows){
         if(err) {
             console.log(err.toString());
         }
