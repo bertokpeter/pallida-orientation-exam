@@ -27,4 +27,26 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + '/licence.html');
 });
 
+app.get('/search', function(req, res){
+    console.log(req.query);
+    conn.query('SELECT * FROM licence_plates WHERE plate LIKE "%' + req.query.q + '%";', function(err, rows){
+        if(err) {
+            console.log(err.toString());
+        }
+        console.log("Data received from Db:\n");
+        let response = {"result": 'ok',
+                        "data":[]};
+        rows.forEach(function(row){
+            response.data.push({
+                "licence": row.plate,
+                "brand": row.car_brand,
+                "model": row.car_model,
+                "year": row.year,
+                "color": row.color
+            });
+        });
+        res.json(response);
+    });
+});
+
 app.listen(3000);
