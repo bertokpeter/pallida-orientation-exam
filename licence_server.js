@@ -54,4 +54,26 @@ app.get('/search', function(req, res){
     });
 });
 
+app.get('/search/:brand', function(req, res){
+    let selector = 'SELECT * FROM licence_plates WHERE car_brand LIKE "' + req.params.brand + '"';
+    conn.query(selector, function(err, rows){
+        if(err) {
+            console.log(err.toString());
+        }
+        console.log("Data received from Db:\n");
+        let response = {"result": 'ok',
+                        "data":[]};
+        rows.forEach(function(row){
+            response.data.push({
+                "licence": row.plate,
+                "brand": row.car_brand,
+                "model": row.car_model,
+                "year": row.year,
+                "color": row.color
+            });
+        });
+        res.json(response);
+    });
+});
+
 app.listen(3000);
