@@ -17,11 +17,8 @@ function xml(method, resource, callback){
 }
 
 searchBtn.addEventListener('click', function(){
-    results.innerHTML = '';
     let query = '?q=' + inputField.value;
-    if (policeBtn.checked && diplomatBtn.checked){
-        createError();
-    } else if (policeBtn.checked){
+    if (policeBtn.checked){
         query += '&police=1';
     } else if (diplomatBtn.checked){
         query += '&diplomat=1';
@@ -39,23 +36,26 @@ function createError(){
 }
 
 function createTable(json){
+    results.innerHTML = '';
+    policeBtn.checked = false;
+    diplomatBtn.checked = false;
     let searchTable = document.createElement('table');
     let htmlString = `<thead>
-                          <th>| Licence plate </th>
-                          <th>| Brand </th>
-                          <th>| Model </th>
-                          <th>| Color </th>
-                          <th>| Year |</th>
-                       </thead>
-                       <tbody>`;
+    <th>| Licence plate </th>
+    <th>| Brand </th>
+    <th>| Model </th>
+    <th>| Color </th>
+    <th>| Year |</th>
+    </thead>
+    <tbody>`;
     json.data.forEach(function(row){
         htmlString += `<tr>
-                           <td>| ${row.licence} </td>
-                           <td>| [<span class="brand">${row.brand}</span>] </td>
-                           <td>| ${row.model} </td>
-                           <td>| ${row.year} </td>
-                           <td>| ${row.color} |</td>
-                       </tr>`
+        <td>| ${row.licence} </td>
+        <td>| [<span class="brand">${row.brand}</span>] </td>
+        <td>| ${row.model} </td>
+        <td>| ${row.year} </td>
+        <td>| ${row.color} |</td>
+        </tr>`
     });
     htmlString += '</tbody>';
     searchTable.innerHTML = htmlString;
@@ -67,7 +67,6 @@ function addBrandEvents(){
     let brands = results.querySelectorAll('.brand');
     brands.forEach(function(element){
         element.addEventListener('click', function(){
-            results.innerHTML = '';
             let query = '/' + element.innerHTML;
             xml('GET', query, createTable);
         });
