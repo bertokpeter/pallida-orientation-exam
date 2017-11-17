@@ -26,17 +26,11 @@ searchBtn.addEventListener('click', function(){
     xml('GET', query, createTable);
 });
 
-function createError(){
-    let errorMessage = document.createElement('p');
-    errorMessage.textContent = 'Sorry, the submitted licence plate is not valid';
-    results.appendChild(errorMessage);
-}
-
 function createTable(json){
     results.innerHTML = '';
     policeBtn.checked = false;
     diplomatBtn.checked = false;
-    if (json.result === 'ok'){
+    if (json.result === 'ok' && json.data.length > 0){
         let searchTable = document.createElement('table');
         let htmlString = `<thead>
         <th>| Licence plate </th>
@@ -59,8 +53,10 @@ function createTable(json){
         searchTable.innerHTML = htmlString;
         results.appendChild(searchTable);
         addBrandEvents();
+    } else if (json.result === 'ok'){
+        createError('ok');
     } else if (json.result === 'error'){
-        createError();
+        createError('error');
     }
 }
 
@@ -72,4 +68,14 @@ function addBrandEvents(){
             xml('GET', query, createTable);
         });
     });
+}
+
+function createError(value){
+    let errorMessage = document.createElement('p');
+    if (value === 'ok'){
+        errorMessage.textContent = 'Sorry, no matches';
+    } else {
+        errorMessage.textContent = 'Sorry, the submitted licence plate is not valid';
+    }
+    results.appendChild(errorMessage);
 }
