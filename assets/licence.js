@@ -2,7 +2,7 @@
 
 const ajax = new XMLHttpRequest();
 const body = document.querySelector('body');
-const seacrhBtn = document.querySelector('button');
+const searchBtn = document.querySelector('button');
 const inputField = document.querySelector('#searchbar');
 const policeBtn = document.querySelector('#police');
 const diplomatBtn = document.querySelector('#diplomat');
@@ -17,5 +17,17 @@ function xml(method, resource, callback){
 }
 
 searchBtn.addEventListener('click', function(){
-    let query = 
+    let query = '?q=' + inputField.value;
+    if (policeBtn.checked && diplomatBtn.checked){
+        createError();
+    }
+    if (policeBtn.checked){
+        query += '&police=1';
+    }
 });
+
+function createError(){
+    let checkError = document.createElement('p');
+    checkError.textContent = 'There no cars which are police cars and diplomat cars at the same time!';
+    body.appendChild(checkError);
+}
