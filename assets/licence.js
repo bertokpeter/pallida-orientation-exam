@@ -17,6 +17,7 @@ function xml(method, resource, callback){
 }
 
 searchBtn.addEventListener('click', function(){
+    results.innerHTML = '';
     let query = '?q=' + inputField.value;
     if (policeBtn.checked && diplomatBtn.checked){
         createError();
@@ -38,7 +39,6 @@ function createError(){
 }
 
 function createTable(json){
-    console.log(json);
     let searchTable = document.createElement('table');
     let htmlString = `<thead>
                           <th>| Licence plate </th>
