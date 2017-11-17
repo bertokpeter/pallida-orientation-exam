@@ -17,7 +17,7 @@ function xml(method, resource, callback){
 }
 
 searchBtn.addEventListener('click', function(){
-    let query = '?q=' + inputField.value;
+    let query = '?q=' + encodeURIComponent(inputField.value);
     if (policeBtn.checked){
         query += '&police=1';
     } else if (diplomatBtn.checked){
@@ -27,40 +27,41 @@ searchBtn.addEventListener('click', function(){
 });
 
 function createError(){
-    results.innerHTML = '';
-    let checkError = document.createElement('p');
-    checkError.textContent = 'There no cars which are police cars and diplomat cars at the same time!';
-    results.appendChild(checkError);
-    policeBtn.checked = false;
-    diplomatBtn.checked = false;
+    let errorMessage = document.createElement('p');
+    errorMessage.textContent = 'Sorry, the submitted licence plate is not valid';
+    results.appendChild(errorMessage);
 }
 
 function createTable(json){
     results.innerHTML = '';
     policeBtn.checked = false;
     diplomatBtn.checked = false;
-    let searchTable = document.createElement('table');
-    let htmlString = `<thead>
-    <th>| Licence plate </th>
-    <th>| Brand </th>
-    <th>| Model </th>
-    <th>| Color </th>
-    <th>| Year |</th>
-    </thead>
-    <tbody>`;
-    json.data.forEach(function(row){
-        htmlString += `<tr>
-        <td>| ${row.licence} </td>
-        <td>| [<span class="brand">${row.brand}</span>] </td>
-        <td>| ${row.model} </td>
-        <td>| ${row.year} </td>
-        <td>| ${row.color} |</td>
-        </tr>`
-    });
-    htmlString += '</tbody>';
-    searchTable.innerHTML = htmlString;
-    results.appendChild(searchTable);
-    addBrandEvents();
+    if (json.result === 'ok'){
+        let searchTable = document.createElement('table');
+        let htmlString = `<thead>
+        <th>| Licence plate </th>
+        <th>| Brand </th>
+        <th>| Model </th>
+        <th>| Color </th>
+        <th>| Year |</th>
+        </thead>
+        <tbody>`;
+        json.data.forEach(function(row){
+            htmlString += `<tr>
+            <td>| ${row.licence} </td>
+            <td>| [<span class="brand">${row.brand}</span>] </td>
+            <td>| ${row.model} </td>
+            <td>| ${row.year} </td>
+            <td>| ${row.color} |</td>
+            </tr>`
+        });
+        htmlString += '</tbody>';
+        searchTable.innerHTML = htmlString;
+        results.appendChild(searchTable);
+        addBrandEvents();
+    } else if (json.result === 'error'){
+        createError();
+    }
 }
 
 function addBrandEvents(){
